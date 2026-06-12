@@ -43,6 +43,16 @@ const links = [
     label: "AI Chat",
     badge: "AI",
   },
+  {
+    href: "/history",
+    icon: (
+      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+    ),
+    label: "History",
+  },
 ];
 
 export default function Sidebar() {

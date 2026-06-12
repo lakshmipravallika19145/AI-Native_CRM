@@ -124,6 +124,16 @@ export default function ChatPage() {
         body: JSON.stringify({ campaignId: campaign.id }),
       });
 
+      // Save chat session
+      await fetch("/api/chat-sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages,
+          summary: `Campaign launched to ${pending.audienceCount} customers — ${pending.segmentData.description}`
+        })
+      });
+
       setLaunchedId(campaign.id);
       setPending(null);
       setMessages(prev => [...prev, {
