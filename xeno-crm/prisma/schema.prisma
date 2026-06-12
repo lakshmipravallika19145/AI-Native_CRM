@@ -1,24 +1,63 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Customer {
-  id         String   @id @default(cuid())
-  name       String
-  email      String   @unique
-  totalSpent Float    @default(0)
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String
+  city      String
+  createdAt DateTime @default(now())
+  orders    Order[]
+  messages  CampaignMessage[]
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  productName String
+  category    String
+  amount      Float
+  orderedAt   DateTime @default(now())
 }
 
 model Campaign {
+  id              String   @id @default(cuid())
+  name            String
+  segmentQuery    Json
+  messageTemplate String
+  channel         String   @default("whatsapp")
+  status          String   @default("draft")
+  audienceCount   Int      @default(0)
+  createdAt       DateTime @default(now())
+  messages        CampaignMessage[]
+}
+
+model CampaignMessage {
   id         String   @id @default(cuid())
-  name       String
-  message    String
-  audience   String
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  body       String
+  status     String   @default("queued")
   createdAt  DateTime @default(now())
+  events     MessageEvent[]
+}
+
+model MessageEvent {
+  id         String   @id @default(cuid())
+  messageId  String
+  message    CampaignMessage @relation(fields: [messageId], references: [id])
+  eventType  String
+  occurredAt DateTime @default(now())
 }
