@@ -28,3 +28,35 @@ body {
   background: #bbb;
   animation: bounce-dot 1.2s infinite ease-in-out;
 }
+@media (max-width: 768px) {
+  /* Hide sidebar on mobile, show top nav instead */
+  aside {
+    display: none !important;
+  }
+
+  main {
+    width: 100% !important;
+  }
+
+  /* Reduce padding on mobile */
+  div[style*="padding: 32px 36px"] {
+    padding: 16px !important;
+  }
+
+  /* Stack grid to single column */
+  div[style*="grid-template-columns: repeat(4"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="grid-template-columns: 2fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="grid-template-columns: 320px 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
