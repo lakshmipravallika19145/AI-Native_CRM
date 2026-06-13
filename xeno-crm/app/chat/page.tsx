@@ -9,6 +9,7 @@ type PendingCampaign = {
   audienceCount: number;
   customerIds: string[];
   messageTemplate: string;
+  previewMessage: string;
 };
 
 const SUGGESTED_PROMPTS = [
@@ -86,17 +87,33 @@ export default function ChatPage() {
         });
         const previewData = await preview.json();
 
-        const msgMatch = data.content.match(/["']([^"']*\{\{name\}\}[^"']*)["']/) ||
-                         data.content.match(/Hi \{\{name\}\}[^.!]*/);
-        const template = msgMatch
-          ? msgMatch[1] || msgMatch[0]
+        const msgMatch = data.content.match(/["']([^"']*\{\{name\}\}[^"']*?)["']/) ||
+                         data.content.match(/(Hi \{\{name\}\}[^.\n!]*)/);
+        const rawTemplate = msgMatch
+          ? (msgMatch[1] || msgMatch[0]).trim()
           : `Hi {{name}}, we have something special for you from Lumé! 🌿`;
+
+        // Get a real customer name for preview
+        let previewName = "Customer";
+        if (previewData.customerIds.length > 0) {
+          try {
+            const custRes = await fetch(`/api/customers/preview?id=${previewData.customerIds[0]}`);
+            if (custRes.ok) {
+              const cust = await custRes.json();
+              previewName = cust.name.split(" ")[0];
+            }
+          } catch {}
+        }
+
+        const template = rawTemplate;
+        const previewMessage = rawTemplate.replace("{{name}}", previewName);
 
         setPending({
           segmentData:     data.segmentData,
           audienceCount:   data.audienceCount,
           customerIds:     previewData.customerIds,
           messageTemplate: template,
+          previewMessage,
         });
       }
     } catch {
@@ -246,7 +263,7 @@ export default function ChatPage() {
               </div>
               <div style={{ background: "#f8f8f6", borderRadius: 10, padding: "12px 14px", border: "1px solid #f0f0ee", marginBottom: 16 }}>
                 <p style={{ fontSize: 10, fontWeight: 600, color: "#bbb", margin: "0 0 6px", textTransform: "uppercase", letterSpacing: 0.8 }}>Message preview</p>
-                <p style={{ fontSize: 13, color: "#555", margin: 0, lineHeight: 1.5 }}>{pending.messageTemplate}</p>
+                <p style={{ fontSize: 13, color: "#555", margin: 0, lineHeight: 1.5 }}>{pending.previewMessage}</p>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
                 <button onClick={launch} disabled={launching || launched} style={{
