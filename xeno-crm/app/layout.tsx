@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import MobileNav from "@/components/MobileNav";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -16,7 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={inter.variable}>
         <div style={{ display: "flex", height: "100vh", background: "#f8f8f6" }}>
           <Sidebar />
-          <main style={{ flex: 1, overflowY: "auto", minWidth: 0, display: "flex", flexDirection: "column" }}>
+          <main style={{ flex: 1, overflowY: "auto", minWidth: 0 }}>
+            <MobileNav />
             {children}
           </main>
         </div>
