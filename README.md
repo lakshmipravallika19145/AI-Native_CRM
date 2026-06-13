@@ -321,6 +321,6 @@ PORT=4000
 ## Known Limitations
 
 - **Render free tier** spins down after 15 minutes of inactivity. Hit `https://your-stub.onrender.com/health` once before running a demo to wake it up.
-- **Segment filtering** runs in-memory JS — works fine for 500 customers, would need SQL WHERE generation for 100k+ customers.
+- **Segment filtering** runs in-memory JS — works fine for 1000 customers, would need SQL WHERE generation for 100k+ customers.
 - **No auth** — single-user demo. Multi-tenant auth would use NextAuth + Postgres row-level security.
 - **College WiFi** blocks port 5432 locally — use mobile hotspot for local development. The deployed Vercel URL works on all networks.
