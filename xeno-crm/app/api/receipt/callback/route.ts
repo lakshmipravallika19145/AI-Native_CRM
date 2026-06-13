@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 const STATUS_RANK: Record<string, number> = {
-  queued: 0, sent: 1, delivered: 2, opened: 3, clicked: 4, failed: 1
+  queued: 0, sent: 1, failed: 2, delivered: 2, opened: 3, clicked: 4
 };
 
 export async function POST(req: NextRequest) {
@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
   if (exists) return NextResponse.json({ skipped: true });
 
   const shouldUpgrade =
-    (STATUS_RANK[eventType] ?? 0) > (STATUS_RANK[message.status] ?? 0);
+    (STATUS_RANK[eventType] ?? 0) >= (STATUS_RANK[message.status] ?? 0) &&
+    eventType !== message.status;
 
   await prisma.$transaction([
     prisma.messageEvent.create({
