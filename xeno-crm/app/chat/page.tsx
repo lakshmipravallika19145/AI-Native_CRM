@@ -42,6 +42,7 @@ export default function ChatPage() {
     role: "assistant",
     content: "Hi! I'm your AI marketing assistant for Lumé 🌿\n\nTell me who you want to reach and what you want to say — I'll build the segment, draft the message, and launch the campaign for you.",
   }]);
+  const [launched, setLaunched] = useState(false);
   const [input, setInput]         = useState("");
   const [loading, setLoading]     = useState(false);
   const [pending, setPending]     = useState<PendingCampaign | null>(null);
@@ -56,6 +57,8 @@ export default function ChatPage() {
   }, [messages, loading, pending]);
 
   async function send(text?: string) {
+    setLaunched(false);
+    setPending(null);
     const msg = (text ?? input).trim();
     if (!msg || loading) return;
     const userMsg: Message = { role: "user", content: msg };
@@ -83,8 +86,11 @@ export default function ChatPage() {
         });
         const previewData = await preview.json();
 
-        const msgMatch = data.content.match(/(?:message:|draft:|here'?s?.*message.*:?\n)(.*{{name}}.*)/i);
-        const template = msgMatch ? msgMatch[1].trim() : "Hi {{name}}, we have something special for you from Lumé! 🌿";
+        const msgMatch = data.content.match(/["']([^"']*\{\{name\}\}[^"']*)["']/) ||
+                         data.content.match(/Hi \{\{name\}\}[^.!]*/);
+        const template = msgMatch
+          ? msgMatch[1] || msgMatch[0]
+          : `Hi {{name}}, we have something special for you from Lumé! 🌿`;
 
         setPending({
           segmentData:     data.segmentData,
@@ -101,7 +107,7 @@ export default function ChatPage() {
   }
 
   async function launch() {
-    if (!pending) return;
+    if (!pending || launching || launched) return;
     setLaunching(true);
     const count = pending.audienceCount;
     try {
@@ -135,6 +141,7 @@ export default function ChatPage() {
       });
 
       setLaunchedId(campaign.id);
+      setLaunched(true);
       setPending(null);
       setMessages(prev => [...prev, {
         role: "assistant",
@@ -242,12 +249,12 @@ export default function ChatPage() {
                 <p style={{ fontSize: 13, color: "#555", margin: 0, lineHeight: 1.5 }}>{pending.messageTemplate}</p>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
-                <button onClick={launch} disabled={launching} style={{
+                <button onClick={launch} disabled={launching || launched} style={{
                   flex: 1, background: "#1a1a1a", color: "white", border: "none",
                   padding: "11px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600,
-                  cursor: launching ? "not-allowed" : "pointer", opacity: launching ? 0.6 : 1,
+                  cursor: (launching || launched) ? "not-allowed" : "pointer", opacity: (launching || launched) ? 0.6 : 1,
                 }}>
-                  {launching ? "Launching..." : `Launch to ${pending.audienceCount.toLocaleString()} customers`}
+                  {launching ? "Launching..." : launched ? "Launched ✓" : `Launch to ${pending.audienceCount.toLocaleString()} customers`}
                 </button>
                 <button onClick={() => setPending(null)} style={{
                   border: "1px solid #f0f0ee", background: "white", color: "#666",
