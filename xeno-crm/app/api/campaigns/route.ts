@@ -14,7 +14,7 @@ export async function GET() {
     ...c,
     stats: {
       total:     c.messages.length,
-      sent:      c.messages.filter(m => ["sent","delivered","opened","clicked"].includes(m.status)).length,
+      sent:      c.messages.filter(m => ["sent","delivered","opened","clicked","failed"].includes(m.status)).length,
       delivered: c.messages.filter(m => ["delivered","opened","clicked"].includes(m.status)).length,
       opened:    c.messages.filter(m => ["opened","clicked"].includes(m.status)).length,
       clicked:   c.messages.filter(m => m.status === "clicked").length,

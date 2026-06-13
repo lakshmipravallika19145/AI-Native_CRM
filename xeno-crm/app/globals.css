@@ -35,7 +35,12 @@ body {
   }
 
   main {
-    width: 100% !important;
+    width: 100vw !important;
+    padding-bottom: 80px !important;
+  }
+
+  .mobile-nav {
+    display: flex !important;
   }
 
   /* Reduce padding on mobile */

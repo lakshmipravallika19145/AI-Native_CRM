@@ -14,14 +14,14 @@ export default function MobileNav() {
   const path = usePathname();
   return (
     <nav style={{
-      display: "none",
-      position: "fixed",
-      bottom: 0, left: 0, right: 0,
-      background: "white",
-      borderTop: "1px solid #f0f0ee",
-      zIndex: 100,
-      padding: "8px 0",
-    }} className="mobile-nav">
+        display: "none",
+        position: "fixed",
+        bottom: 0, left: 0, right: 0,
+        background: "white",
+        borderTop: "1px solid #f0f0ee",
+        zIndex: 100,
+        padding: "8px 0 12px",
+      }} className="mobile-nav">
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         {links.map(l => (
           <Link key={l.href} href={l.href} style={{
