@@ -37,12 +37,18 @@ export default async function Dashboard() {
   const or = delivered > 0 ? Math.round((opened / delivered) * 100) : 0;
   const cr = opened > 0 ? Math.round((clicked / opened) * 100) : 0;
 
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good morning" :
+    hour < 18 ? "Good afternoon" :
+    "Good evening";
+
   return (
     <div style={{ padding: "32px 36px", maxWidth: 1200 }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>Good evening 👋</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>{greeting} 👋</h1>
           <p style={{ fontSize: 14, color: "#999", margin: "4px 0 0" }}>
             Here's how Lumé is performing across all campaigns
           </p>
