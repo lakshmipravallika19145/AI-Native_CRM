@@ -87,11 +87,8 @@ export default function ChatPage() {
         });
         const previewData = await preview.json();
 
-        const msgMatch = data.content.match(/["']([^"']*\{\{name\}\}[^"']*?)["']/) ||
-                         data.content.match(/(Hi \{\{name\}\}[^.\n!]*)/);
-        const rawTemplate = msgMatch
-          ? (msgMatch[1] || msgMatch[0]).trim()
-          : `Hi {{name}}, we have something special for you from Lumé! 🌿`;
+        const rawTemplate = data.messageTemplate ||
+          `Hi {{name}}, we have something special for you from Lumé! 🌿`;
 
         // Get a real customer name for preview
         let previewName = "Customer";
