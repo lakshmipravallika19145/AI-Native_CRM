@@ -37,10 +37,11 @@ export default async function Dashboard() {
   const or = delivered > 0 ? Math.round((opened / delivered) * 100) : 0;
   const cr = opened > 0 ? Math.round((clicked / opened) * 100) : 0;
 
-  const hour = new Date().getHours();
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST = UTC+5:30
+  const istHour = new Date(Date.now() + istOffset).getUTCHours();
   const greeting =
-    hour < 12 ? "Good morning" :
-    hour < 18 ? "Good afternoon" :
+    istHour < 12 ? "Good morning" :
+    istHour < 18 ? "Good afternoon" :
     "Good evening";
 
   return (
