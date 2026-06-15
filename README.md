@@ -9,9 +9,8 @@ A fully deployed, AI-powered CRM that helps a D2C skincare brand (Lumé) reach i
 
 | Service | URL |
 |---|---|
-| CRM App | `https://your-crm.vercel.app` |
-| Channel Stub | `https://your-stub.onrender.com` |
-| Health Check | `https://your-stub.onrender.com/health` |
+| CRM App | `https://ai-native-crm-xi.vercel.app/` |
+| Channel Stub | `https://lume-channel-stub.onrender.com` |
 
 ---
 
